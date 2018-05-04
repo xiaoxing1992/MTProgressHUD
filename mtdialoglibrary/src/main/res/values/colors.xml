@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="mt_colorDialogWindowBg">#00000000</color>
+    <color name="mt_colorDialogTrans">#00000000</color>
+    <color name="mt_colorDialogViewBg">#b2000000</color>
+    <color name="mt_colorDialogTextColor">#ffffff</color>
+    <color name="mt_colorDialogProgressBarColor">#ffffff</color>
+    <color name="mt_colorDialogImageTintColor">#ffffff</color>
+    <!--进度条相关的颜色-->
+    <color name="mt_colorDialogProgressBarBgColor">#b4b4b4</color>
+    <color name="mt_colorDialogProgressBarProgressColor">#FFFFFF</color>
+    <color name="mt_colorDialogProgressBarSecondProgressColor">#ff9c9c</color>
+
+</resources>
