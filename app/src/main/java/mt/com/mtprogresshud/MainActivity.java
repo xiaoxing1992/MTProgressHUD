@@ -292,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 })
                 .build();
-        new MStatusDialog(mContext, mDialogConfig).show("提交数据失败,请重新尝试!", mContext.getResources().getDrawable(R.mipmap.ic_launcher), 1000);
+        new MStatusDialog(mContext, mDialogConfig).show("提交数据失败,请重新尝试!", mContext.getResources().getDrawable(R.mipmap.img_launcher), 1000);
     }
 
     /** --------------------MStatusDialog end ------------------- */
