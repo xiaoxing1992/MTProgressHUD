@@ -1,9 +1,10 @@
 package com.mt.mtdialoglibrary;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -24,6 +25,8 @@ import com.mt.mtdialoglibrary.view.MProgressWheel;
 
 public class MProgressDialog {
 
+    private static final String LoadingDefaultMsg = "加载中";
+
     private static Dialog mDialog;
     private static MDialogConfig mDialogConfig;
 
@@ -43,9 +46,8 @@ public class MProgressDialog {
         mDialog.setContentView(mProgressDialogView);// 设置布局
 
         //设置整个Dialog的宽高
-        DisplayMetrics dm = new DisplayMetrics();
-        WindowManager windowManager = ((Activity) mContext).getWindowManager();
-        windowManager.getDefaultDisplay().getMetrics(dm);
+        Resources resources = mContext.getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
         int screenW = dm.widthPixels;
         int screenH = dm.heightPixels;
 
@@ -64,11 +66,55 @@ public class MProgressDialog {
         //默认相关
         progress_wheel.spin();
 
+        configView(mContext);
+    }
+
+    private static void configView(Context mContext) {
         //设置配置
         if (mDialogConfig == null) {
             mDialogConfig = new MDialogConfig.Builder().build();
         }
-        configView(mContext);
+
+        //设置动画
+        if (mDialogConfig.animationID != 0 && mDialog.getWindow() != null) {
+            try {
+                mDialog.getWindow().setWindowAnimations(mDialogConfig.animationID);
+            } catch (Exception e) {
+
+            }
+        }
+
+        //点击外部可以取消
+        mDialog.setCanceledOnTouchOutside(mDialogConfig.canceledOnTouchOutside);
+        //返回键取消
+        mDialog.setCancelable(mDialogConfig.cancelable);
+        //window背景色
+        dialog_window_background.setBackgroundColor(mDialogConfig.backgroundWindowColor);
+        //弹框背景
+        GradientDrawable myGrad = new GradientDrawable();
+        myGrad.setColor(mDialogConfig.backgroundViewColor);
+        myGrad.setStroke(MSizeUtils.dp2px(mContext, mDialogConfig.strokeWidth), mDialogConfig.strokeColor);
+        myGrad.setCornerRadius(MSizeUtils.dp2px(mContext, mDialogConfig.cornerRadius));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            dialog_view_bg.setBackground(myGrad);
+        } else {
+            dialog_view_bg.setBackgroundDrawable(myGrad);
+        }
+        dialog_view_bg.setPadding(
+                MSizeUtils.dp2px(mContext, mDialogConfig.paddingLeft),
+                MSizeUtils.dp2px(mContext, mDialogConfig.paddingTop),
+                MSizeUtils.dp2px(mContext, mDialogConfig.paddingRight),
+                MSizeUtils.dp2px(mContext, mDialogConfig.paddingBottom)
+        );
+
+        progress_wheel.setBarColor(mDialogConfig.progressColor);
+        progress_wheel.setBarWidth(MSizeUtils.dp2px(mContext, mDialogConfig.progressWidth));
+        progress_wheel.setRimColor(mDialogConfig.progressRimColor);
+        progress_wheel.setRimWidth(mDialogConfig.progressRimWidth);
+
+        tv_show.setTextColor(mDialogConfig.textColor);
+        tv_show.setTextSize(mDialogConfig.textSize);
+
         //点击事件
         dialog_window_background.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,30 +127,8 @@ public class MProgressDialog {
         });
     }
 
-    private static void configView(Context mContext) {
-        mDialog.setCancelable(mDialogConfig.cancelable);
-        mDialog.setCanceledOnTouchOutside(mDialogConfig.canceledOnTouchOutside);
-        dialog_window_background.setBackgroundColor(mDialogConfig.backgroundWindowColor);
-
-        GradientDrawable myGrad = new GradientDrawable();
-        myGrad.setColor(mDialogConfig.backgroundViewColor);
-        myGrad.setStroke(MSizeUtils.dp2px(mContext, mDialogConfig.strokeWidth), mDialogConfig.strokeColor);
-        myGrad.setCornerRadius(MSizeUtils.dp2px(mContext, mDialogConfig.cornerRadius));
-        dialog_view_bg.setBackground(myGrad);
-
-
-
-        progress_wheel.setBarColor(mDialogConfig.progressColor);
-        progress_wheel.setBarWidth(MSizeUtils.dp2px(mContext, mDialogConfig.progressWidth));
-        progress_wheel.setRimColor(mDialogConfig.progressRimColor);
-        progress_wheel.setRimWidth(mDialogConfig.progressRimWidth);
-
-        tv_show.setTextColor(mDialogConfig.textColor);
-        tv_show.setTextSize(mDialogConfig.textSize);
-    }
-
     public static void showProgress(Context context) {
-        showProgress(context, "加载中");
+        showProgress(context, LoadingDefaultMsg);
     }
 
     public static void showProgress(Context context, String msg) {
@@ -112,38 +136,51 @@ public class MProgressDialog {
     }
 
     public static void showProgress(Context context, MDialogConfig mDialogConfig) {
-        showProgress(context, "加载中", mDialogConfig);
+        showProgress(context, LoadingDefaultMsg, mDialogConfig);
     }
 
-    public static void showProgress(Context context, String msg, MDialogConfig mDialogConfig) {
-        MProgressDialog.mDialogConfig = mDialogConfig;
-        dismissProgress();
-        initDialog(context);
-        if (mDialog != null && tv_show != null) {
-            if (TextUtils.isEmpty(msg)) {
-                tv_show.setVisibility(View.GONE);
-            } else {
-                tv_show.setVisibility(View.VISIBLE);
-                tv_show.setText(msg);
+    public static void showProgress(Context context, String msg, MDialogConfig dialogConfig) {
+        try {
+            dismissProgress();
+            //设置配置
+            if (dialogConfig == null) {
+                dialogConfig = new MDialogConfig.Builder().build();
             }
-            mDialog.show();
+            mDialogConfig = dialogConfig;
+
+            initDialog(context);
+            if (mDialog != null && tv_show != null) {
+                if (TextUtils.isEmpty(msg)) {
+                    tv_show.setVisibility(View.GONE);
+                } else {
+                    tv_show.setVisibility(View.VISIBLE);
+                    tv_show.setText(msg);
+                }
+                mDialog.show();
+            }
+        } catch (Exception e) {
+
         }
     }
 
     public static void dismissProgress() {
-        if (mDialog != null && mDialog.isShowing()) {
-            mDialog.dismiss();
-            //判断是不是有监听
-            if(mDialogConfig.onDialogDismissListener != null){
-                mDialogConfig.onDialogDismissListener.onDismiss();
+        try {
+            if (mDialog != null && mDialog.isShowing()) {
+                //判断是不是有监听
+                if (mDialogConfig.onDialogDismissListener != null) {
+                    mDialogConfig.onDialogDismissListener.onDismiss();
+                    mDialogConfig.onDialogDismissListener = null;
+                }
+                mDialogConfig = null;
+                dialog_window_background = null;
+                dialog_view_bg = null;
+                progress_wheel = null;
+                tv_show = null;
+                mDialog.dismiss();
+                mDialog = null;
             }
-            //清除
-            mDialog = null;
-            mDialogConfig = null;
-            dialog_window_background = null;
-            dialog_view_bg = null;
-            progress_wheel = null;
-            tv_show = null;
+        } catch (Exception e) {
+
         }
     }
 

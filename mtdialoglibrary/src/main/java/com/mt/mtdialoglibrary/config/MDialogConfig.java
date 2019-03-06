@@ -2,6 +2,7 @@ package com.mt.mtdialoglibrary.config;
 
 import android.graphics.Color;
 import android.support.annotation.Nullable;
+import android.support.annotation.StyleRes;
 
 import com.mt.mtdialoglibrary.listeners.OnDialogDismissListener;
 
@@ -38,28 +39,38 @@ public class MDialogConfig {
     public int textSize = 12;
     //消失的监听
     public OnDialogDismissListener onDialogDismissListener;
+    //Dialog进出动画
+    public int animationID = 0;
+    //布局的Padding--int left, int top, int right, int bottom
+    public int paddingLeft = 12;
+    public int paddingTop = 12;
+    public int paddingRight = 12;
+    public int paddingBottom = 12;
 
+    //StatusDialog专用：中间图片宽高
+    public int imgWidth = 40;
+    public int imgHeight = 40;
 
     private MDialogConfig() {
     }
 
     public static class Builder {
 
-        private MDialogConfig mToastConfig = null;
+        private MDialogConfig mDialogConfig = null;
 
         public Builder() {
-            mToastConfig = new MDialogConfig();
+            mDialogConfig = new MDialogConfig();
         }
 
         public MDialogConfig build() {
-            return mToastConfig;
+            return mDialogConfig;
         }
 
         /**
          * 设置点击返回键取消Dialog
          */
         public Builder isCancelable(@Nullable boolean cancelable) {
-            mToastConfig.cancelable = cancelable;
+            mDialogConfig.cancelable = cancelable;
             return this;
         }
 
@@ -71,67 +82,86 @@ public class MDialogConfig {
          * @return
          */
         public Builder isCanceledOnTouchOutside(@Nullable boolean canceledOnTouchOutside) {
-            mToastConfig.canceledOnTouchOutside = canceledOnTouchOutside;
+            mDialogConfig.canceledOnTouchOutside = canceledOnTouchOutside;
             return this;
         }
 
         public Builder setBackgroundWindowColor(@Nullable int backgroundWindowColor) {
-            mToastConfig.backgroundWindowColor = backgroundWindowColor;
+            mDialogConfig.backgroundWindowColor = backgroundWindowColor;
             return this;
         }
 
         public Builder setBackgroundViewColor(@Nullable int backgroundViewColor) {
-            mToastConfig.backgroundViewColor = backgroundViewColor;
+            mDialogConfig.backgroundViewColor = backgroundViewColor;
             return this;
         }
 
         public Builder setStrokeColor(@Nullable int strokeColor) {
-            mToastConfig.strokeColor = strokeColor;
+            mDialogConfig.strokeColor = strokeColor;
             return this;
         }
 
         public Builder setStrokeWidth(@Nullable float strokeWidth) {
-            mToastConfig.strokeWidth = strokeWidth;
+            mDialogConfig.strokeWidth = strokeWidth;
             return this;
         }
 
         public Builder setCornerRadius(@Nullable float cornerRadius) {
-            mToastConfig.cornerRadius = cornerRadius;
+            mDialogConfig.cornerRadius = cornerRadius;
             return this;
         }
 
         public Builder setProgressColor(@Nullable int progressColor) {
-            mToastConfig.progressColor = progressColor;
+            mDialogConfig.progressColor = progressColor;
             return this;
         }
 
         public Builder setProgressWidth(@Nullable float progressWidth) {
-            mToastConfig.progressWidth = progressWidth;
+            mDialogConfig.progressWidth = progressWidth;
             return this;
         }
 
         public Builder setProgressRimColor(int progressRimColor) {
-            mToastConfig.progressRimColor = progressRimColor;
+            mDialogConfig.progressRimColor = progressRimColor;
             return this;
         }
 
         public Builder setProgressRimWidth(int progressRimWidth) {
-            mToastConfig.progressRimWidth = progressRimWidth;
+            mDialogConfig.progressRimWidth = progressRimWidth;
             return this;
         }
 
         public Builder setTextColor(@Nullable int textColor) {
-            mToastConfig.textColor = textColor;
+            mDialogConfig.textColor = textColor;
             return this;
         }
 
         public Builder setTextSize(@Nullable int textSize) {
-            mToastConfig.textSize = textSize;
+            mDialogConfig.textSize = textSize;
             return this;
         }
 
         public Builder setOnDialogDismissListener(OnDialogDismissListener onDialogDismissListener) {
-            mToastConfig.onDialogDismissListener = onDialogDismissListener;
+            mDialogConfig.onDialogDismissListener = onDialogDismissListener;
+            return this;
+        }
+
+        public Builder setAnimationID(@StyleRes int resId) {
+            mDialogConfig.animationID = resId;
+            return this;
+        }
+
+        public Builder setImgWidthAndHeight(int imgWidth, int imgHeight) {
+            mDialogConfig.imgWidth = imgWidth;
+            mDialogConfig.imgHeight = imgHeight;
+            return this;
+        }
+
+        public Builder setPadding(int paddingLeft, int paddingTop, int paddingRight, int paddingBottom) {
+            mDialogConfig.paddingLeft = paddingLeft;
+            mDialogConfig.paddingTop = paddingTop;
+            mDialogConfig.paddingRight = paddingRight;
+            mDialogConfig.paddingBottom = paddingBottom;
             return this;
         }
     }

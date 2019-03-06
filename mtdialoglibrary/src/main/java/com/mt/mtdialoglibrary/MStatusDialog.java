@@ -1,14 +1,17 @@
 package com.mt.mtdialoglibrary;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -24,7 +27,7 @@ import com.mt.mtdialoglibrary.utils.MSizeUtils;
 
 public class MStatusDialog {
 
-    private Handler mHandler = new Handler();
+    private Handler mHandler;
     private Context mContext;
     private Dialog mDialog;
 
@@ -42,6 +45,7 @@ public class MStatusDialog {
     public MStatusDialog(Context context, MDialogConfig mDialogConfig) {
         mContext = context;
         this.mDialogConfig = mDialogConfig;
+        mHandler = new Handler(Looper.getMainLooper());
         //初始化
         initDialog();
     }
@@ -56,9 +60,8 @@ public class MStatusDialog {
         mDialog.setContentView(mProgressDialogView);// 设置布局
 
         //设置整个Dialog的宽高
-        DisplayMetrics dm = new DisplayMetrics();
-        WindowManager windowManager = ((Activity) mContext).getWindowManager();
-        windowManager.getDefaultDisplay().getMetrics(dm);
+        Resources resources = mContext.getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
         int screenW = dm.widthPixels;
         int screenH = dm.heightPixels;
 
@@ -68,10 +71,10 @@ public class MStatusDialog {
         mDialog.getWindow().setAttributes(layoutParams);
 
         //获取布局
-        dialog_window_background =  mProgressDialogView.findViewById(R.id.dialog_window_background);
-        dialog_view_bg =  mProgressDialogView.findViewById(R.id.dialog_view_bg);
-        imageStatus =  mProgressDialogView.findViewById(R.id.imageStatus);
-        tvShow =  mProgressDialogView.findViewById(R.id.tvShow);
+        dialog_window_background = mProgressDialogView.findViewById(R.id.dialog_window_background);
+        dialog_view_bg = mProgressDialogView.findViewById(R.id.dialog_view_bg);
+        imageStatus = mProgressDialogView.findViewById(R.id.imageStatus);
+        tvShow = mProgressDialogView.findViewById(R.id.tvShow);
 
         //默认配置
         configView();
@@ -79,14 +82,46 @@ public class MStatusDialog {
     }
 
     private void configView() {
+        if (mDialogConfig == null) {
+            mDialogConfig = new MDialogConfig.Builder().build();
+        }
+
         dialog_window_background.setBackgroundColor(mDialogConfig.backgroundWindowColor);
         tvShow.setTextColor(mDialogConfig.textColor);
+        tvShow.setTextSize(mDialogConfig.textSize);
 
         GradientDrawable myGrad = new GradientDrawable();
         myGrad.setColor(mDialogConfig.backgroundViewColor);
         myGrad.setStroke(MSizeUtils.dp2px(mContext, mDialogConfig.strokeWidth), mDialogConfig.strokeColor);
         myGrad.setCornerRadius(MSizeUtils.dp2px(mContext, mDialogConfig.cornerRadius));
-        dialog_view_bg.setBackground(myGrad);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            dialog_view_bg.setBackground(myGrad);
+        } else {
+            dialog_view_bg.setBackgroundDrawable(myGrad);
+        }
+        dialog_view_bg.setPadding(
+                MSizeUtils.dp2px(mContext, mDialogConfig.paddingLeft),
+                MSizeUtils.dp2px(mContext, mDialogConfig.paddingTop),
+                MSizeUtils.dp2px(mContext, mDialogConfig.paddingRight),
+                MSizeUtils.dp2px(mContext, mDialogConfig.paddingBottom)
+        );
+
+        //设置动画
+        if (mDialogConfig.animationID != 0 && mDialog.getWindow() != null) {
+            try {
+                mDialog.getWindow().setWindowAnimations(mDialogConfig.animationID);
+            } catch (Exception e) {
+
+            }
+        }
+
+        //图片宽高
+        if (mDialogConfig.imgWidth > 0 && mDialogConfig.imgHeight > 0) {
+            ViewGroup.LayoutParams layoutParams = imageStatus.getLayoutParams();
+            layoutParams.width = MSizeUtils.dp2px(mContext, mDialogConfig.imgWidth);
+            layoutParams.height = MSizeUtils.dp2px(mContext, mDialogConfig.imgHeight);
+            imageStatus.setLayoutParams(layoutParams);
+        }
     }
 
     public void show(String msg, Drawable drawable) {
@@ -100,12 +135,27 @@ public class MStatusDialog {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mDialog.dismiss();
-                mHandler.removeCallbacksAndMessages(null);
-                if(mDialogConfig != null && mDialogConfig.onDialogDismissListener != null){
-                    mDialogConfig.onDialogDismissListener.onDismiss();
-                }
+                dismiss();
             }
         }, delayMillis);
+    }
+
+    public void dismiss() {
+        try {
+            mContext = null;
+            if(mHandler != null){
+                mHandler.removeCallbacksAndMessages(null);
+                mHandler = null;
+            }
+            if (mDialog != null) {
+                mDialog.dismiss();
+                mDialog = null;
+            }
+            if (mDialogConfig != null && mDialogConfig.onDialogDismissListener != null) {
+                mDialogConfig.onDialogDismissListener.onDismiss();
+            }
+        } catch (Exception e) {
+
+        }
     }
 }

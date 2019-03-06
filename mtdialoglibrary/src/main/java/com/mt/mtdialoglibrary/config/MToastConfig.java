@@ -14,6 +14,7 @@ public class MToastConfig {
         CENTRE, BOTTOM
     }
 
+    public float toastTextSize = 13;
     public int ToastTextColor = Color.parseColor("#FFFFFFFF");
     public int ToastBackgroundColor = Color.parseColor("#CC000000");
     public float ToastBackgroundCornerRadius = 10.0f;
@@ -21,7 +22,14 @@ public class MToastConfig {
     public int ToastBackgroundStrokeColor = Color.parseColor("#00000000");
     public MToastGravity ToastGravity = MToastGravity.CENTRE;
     public Drawable ToastIcon = null;
-
+    //布局的Padding--int left, int top, int right, int bottom
+    public int paddingLeft = 20;
+    public int paddingTop = 12;
+    public int paddingRight = 20;
+    public int paddingBottom = 12;
+    //图片宽高
+    public int imgWidth = 20;
+    public int imgHeight = 20;
 
     private MToastConfig() {
     }
@@ -70,6 +78,20 @@ public class MToastConfig {
 
         public Builder setBackgroundStrokeColor(@ColorInt int strokeColor) {
             mToastConfig.ToastBackgroundStrokeColor = strokeColor;
+            return this;
+        }
+
+        public Builder setImgWidthAndHeight(int imgWidth, int imgHeight) {
+            mToastConfig.imgWidth = imgWidth;
+            mToastConfig.imgHeight = imgHeight;
+            return this;
+        }
+
+        public Builder setPadding(int paddingLeft, int paddingTop, int paddingRight, int paddingBottom) {
+            mToastConfig.paddingLeft = paddingLeft;
+            mToastConfig.paddingTop = paddingTop;
+            mToastConfig.paddingRight = paddingRight;
+            mToastConfig.paddingBottom = paddingBottom;
             return this;
         }
     }
