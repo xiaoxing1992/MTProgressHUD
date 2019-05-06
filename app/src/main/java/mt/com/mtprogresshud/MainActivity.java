@@ -95,17 +95,70 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.btn01:
                 mDialogConfig = new MDialogConfig.Builder()
+                        //全屏背景窗体的颜色
+//                        .setBackgroundWindowColor(getMyColor(R.color.FF24000000))
+                        //View背景的颜色
+                        .setBackgroundViewColor(getMyColor(R.color.FF313333))
+                        .setProgressColor(getMyColor(R.color.FF969696))
+                        //字体的颜色
+                        .setTextColor(getMyColor(R.color.FF969696))
+                        //View圆角大小
+                        .setCornerRadius(10)
                         .isCancelable(true)
+                        //关闭的监听
+                        .setOnDialogDismissListener(new OnDialogDismissListener() {
+                            @Override
+                            public void onDismiss() {
+                                MToast.makeTextShort(mContext, "监听到了MStatusDialog关闭了");
+                            }
+                        })
                         .build();
                 MProgressDialog.showProgress(this, mDialogConfig);
                 break;
             case R.id.btn02:
-                MProgressDialog.showProgress(this, text01);
+                mDialogConfig = new MDialogConfig.Builder()
+                        //全屏背景窗体的颜色
+//                        .setBackgroundWindowColor(getMyColor(R.color.FF24000000))
+                        //View背景的颜色
+                        .setBackgroundViewColor(getMyColor(R.color.FF313333))
+                        .setProgressColor(getMyColor(R.color.FF969696))
+                        //字体的颜色
+                        .setTextColor(getMyColor(R.color.FF969696))
+                        //View圆角大小
+                        .setCornerRadius(10)
+                        .isCancelable(true)
+                        //关闭的监听
+                        .setOnDialogDismissListener(new OnDialogDismissListener() {
+                            @Override
+                            public void onDismiss() {
+                                MToast.makeTextShort(mContext, "监听到了MStatusDialog关闭了");
+                            }
+                        })
+                        .build();
+                MProgressDialog.showProgress(this, text01,mDialogConfig);
                 //延时关闭
                 delayDismissProgressDialog();
                 break;
             case R.id.btn03:
-                MProgressDialog.showProgress(this, "");
+                MDialogConfig mDialogConfig2 = new MDialogConfig.Builder()
+                        //全屏背景窗体的颜色
+//                        .setBackgroundWindowColor(getMyColor(R.color.FF24000000))
+                        //View背景的颜色
+                        .setBackgroundViewColor(getMyColor(R.color.FF313333))
+                        .setProgressColor(getMyColor(R.color.FF969696))
+                        //字体的颜色
+                        .setTextColor(getMyColor(R.color.FF969696))
+                        //View圆角大小
+                        .setCornerRadius(10)
+                        //关闭的监听
+                        .setOnDialogDismissListener(new OnDialogDismissListener() {
+                            @Override
+                            public void onDismiss() {
+                                MToast.makeTextShort(mContext, "监听到了MStatusDialog关闭了");
+                            }
+                        })
+                        .build();
+                MProgressDialog.showProgress(this, "",mDialogConfig2);
                 //延时关闭
                 delayDismissProgressDialog();
                 break;

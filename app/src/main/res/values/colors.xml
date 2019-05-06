@@ -16,4 +16,10 @@
     <color name="colorDialogTest">#02d4a6</color>
     <color name="colorDialogTest2">#ffd000</color>
     <color name="white">#FFFFFF</color>
+    <color name="FFE54A4D4F">#E54A4D4F</color>
+    <color name="FFFFF9F9FB">#FFF9F9FB</color>
+    <color name="FF24000000">#24000000</color>
+    <color name="FF969696">#FF969696</color>
+    <color name="FF313333">#ff313333</color>
+    <color name="default_shimmer_color">#e3e1e3</color>
 </resources>
