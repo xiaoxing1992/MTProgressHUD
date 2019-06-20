@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.mt.mtdialoglibrary.MProgressBarCancelDialog;
 import com.mt.mtdialoglibrary.MProgressBarDialog;
 import com.mt.mtdialoglibrary.MProgressDialog;
 import com.mt.mtdialoglibrary.MStatusDialog;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private MProgressBarDialog mProgressBarDialog;
+    private MProgressBarCancelDialog mProgressBarCancelDialog;
 
     private Button btn01;
     private Button btn02;
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btn16;
     private Button btn17;
     private Button btn18;
+    private Button btn19;
     private TestFragmentDialog testFragmentDialog;
 
     @Override
@@ -71,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn16 = (Button) findViewById(R.id.btn16);
         btn17 = (Button) findViewById(R.id.btn17);
         btn18 = (Button) findViewById(R.id.btn18);
+        btn19 = (Button) findViewById(R.id.btn19);
 
         btn01.setOnClickListener(this);
         btn02.setOnClickListener(this);
@@ -87,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn16.setOnClickListener(this);
         btn17.setOnClickListener(this);
         btn18.setOnClickListener(this);
+        btn19.setOnClickListener(this);
     }
 
     @Override
@@ -135,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                         })
                         .build();
-                MProgressDialog.showProgress(this, text01,mDialogConfig);
+                MProgressDialog.showProgress(this, text01, mDialogConfig);
                 //延时关闭
                 delayDismissProgressDialog();
                 break;
@@ -158,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                         })
                         .build();
-                MProgressDialog.showProgress(this, "",mDialogConfig2);
+                MProgressDialog.showProgress(this, "", mDialogConfig2);
                 //延时关闭
                 delayDismissProgressDialog();
                 break;
@@ -235,6 +240,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn18:
                 showFragmentDialog();
                 showFragmentDialog();
+                break;
+            case R.id.btn19:
+                configProgressbarCancelCircleDialog();
+                initCancelTimer();
                 break;
 
         }
@@ -361,6 +370,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .build();
     }
 
+    /**
+     * --------------------MProgressBarDialog start -------------------
+     */
+    private void configProgressbarCancelCircleDialog() {
+        //新建一个Dialog
+        mProgressBarCancelDialog = new MProgressBarCancelDialog.Builder(mContext)
+                .setStyle(MProgressBarCancelDialog.MProgressBarDialogStyle_Circle)
+                .setCancelListener(new MProgressBarCancelDialog.onClickCancelListener() {
+                    @Override
+                    public void onClickCancel() {
+                        destroyTimer();
+                        currentProgress = 0.0f;
+                        mProgressBarCancelDialog.showStatusProgress(R.mipmap.img_warning, "取消");
+                        //关闭
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mProgressBarCancelDialog.dismiss();
+                            }
+                        }, 500);
+                    }
+                })
+                .build();
+    }
+
     private void configProgressbarCircleDialog2() {
         //新建一个Dialog
         mProgressBarDialog = new MProgressBarDialog.Builder(mContext)
@@ -436,7 +470,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void run() {
                         if (currentProgress < 100f) {
-                            mProgressBarDialog.showProgress((int) currentProgress, "当前进度为：" + currentProgress + "%");
+                            mProgressBarDialog.showProgress((int) currentProgress, "进度：" + currentProgress + "%");
                             currentProgress += 5;
                         } else {
                             destroyTimer();
@@ -447,6 +481,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 @Override
                                 public void run() {
                                     mProgressBarDialog.dismiss();
+                                }
+                            }, 500);
+                        }
+                    }
+                });
+            }
+        };
+        timer.schedule(task, 0, 200); //延时1000ms后执行，1000ms执行一次
+    }
+
+    private void initCancelTimer() {
+        destroyTimer();
+        timer = new Timer();
+        task = new TimerTask() {
+            @Override
+            public void run() {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (currentProgress < 100f) {
+                            mProgressBarCancelDialog.showProgress((int) currentProgress, "进度：" + currentProgress + "%");
+                            currentProgress += 5;
+                        } else {
+                            destroyTimer();
+                            currentProgress = 0.0f;
+                            mProgressBarCancelDialog.showStatusProgress(R.mipmap.img_done, "完成");
+                            //关闭
+                            mHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mProgressBarCancelDialog.dismiss();
                                 }
                             }, 500);
                         }
