@@ -43,6 +43,8 @@ public class MProgressBarCancelDialog {
     private ImageView iv_status;
     private MCircularProgressBar circularProgressBar;
 
+    private onClickCancelListener onClickCancelListener;
+
     public MProgressBarCancelDialog(Context context) {
         this(context, new MProgressBarCancelDialog.Builder(context));
     }
@@ -105,8 +107,8 @@ public class MProgressBarCancelDialog {
         tvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mBuilder.onClickCancelListener != null) {
-                    mBuilder.onClickCancelListener.onClickCancel();
+                if (onClickCancelListener != null) {
+                    onClickCancelListener.onClickCancel();
                 }
             }
         });
@@ -253,8 +255,6 @@ public class MProgressBarCancelDialog {
         //Dialog进出动画
         int animationID;
 
-        onClickCancelListener onClickCancelListener;
-
         public Builder(Context context) {
             mContext = context;
             //默认配置
@@ -350,11 +350,6 @@ public class MProgressBarCancelDialog {
             return this;
         }
 
-        public Builder setCancelListener(onClickCancelListener onClickCancelListener) {
-            this.onClickCancelListener = onClickCancelListener;
-            return this;
-        }
-
     }
 
 
@@ -363,4 +358,7 @@ public class MProgressBarCancelDialog {
     }
 
 
+    public void setCancelListener(onClickCancelListener onClickCancelListener) {
+        this.onClickCancelListener = onClickCancelListener;
+    }
 }

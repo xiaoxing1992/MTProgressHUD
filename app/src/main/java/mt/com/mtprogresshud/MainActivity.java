@@ -377,22 +377,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //新建一个Dialog
         mProgressBarCancelDialog = new MProgressBarCancelDialog.Builder(mContext)
                 .setStyle(MProgressBarCancelDialog.MProgressBarDialogStyle_Circle)
-                .setCancelListener(new MProgressBarCancelDialog.onClickCancelListener() {
-                    @Override
-                    public void onClickCancel() {
-                        destroyTimer();
-                        currentProgress = 0.0f;
-                        mProgressBarCancelDialog.showStatusProgress(R.mipmap.img_warning, "取消");
-                        //关闭
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mProgressBarCancelDialog.dismiss();
-                            }
-                        }, 500);
-                    }
-                })
                 .build();
+
+        mProgressBarCancelDialog.setCancelListener(new MProgressBarCancelDialog.onClickCancelListener() {
+            @Override
+            public void onClickCancel() {
+                destroyTimer();
+                currentProgress = 0.0f;
+                mProgressBarCancelDialog.showStatusProgress(R.mipmap.img_warning, "取消");
+                //关闭
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarCancelDialog.dismiss();
+                    }
+                }, 500);
+            }
+        });
     }
 
     private void configProgressbarCircleDialog2() {
