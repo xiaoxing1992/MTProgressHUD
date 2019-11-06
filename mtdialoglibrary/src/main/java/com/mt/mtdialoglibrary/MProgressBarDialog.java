@@ -95,11 +95,11 @@ public class MProgressBarDialog {
         }
 
         //获取布局
-        dialog_window_background =  mProgressDialogView.findViewById(R.id.dialog_window_background);
-        dialog_view_bg =  mProgressDialogView.findViewById(R.id.dialog_view_bg);
-        tvShow =  mProgressDialogView.findViewById(R.id.tvShow);
-        horizontalProgressBar =  mProgressDialogView.findViewById(R.id.horizontalProgressBar);
-        circularProgressBar =  mProgressDialogView.findViewById(R.id.circularProgressBar);
+        dialog_window_background = mProgressDialogView.findViewById(R.id.dialog_window_background);
+        dialog_view_bg = mProgressDialogView.findViewById(R.id.dialog_view_bg);
+        tvShow = mProgressDialogView.findViewById(R.id.tvShow);
+        horizontalProgressBar = mProgressDialogView.findViewById(R.id.horizontalProgressBar);
+        circularProgressBar = mProgressDialogView.findViewById(R.id.circularProgressBar);
 
         horizontalProgressBar.setVisibility(View.GONE);
         circularProgressBar.setVisibility(View.GONE);
@@ -159,12 +159,14 @@ public class MProgressBarDialog {
         layoutParams.height = MSizeUtils.dp2px(mContext, mBuilder.horizontalProgressBarHeight);
         horizontalProgressBar.setLayoutParams(layoutParams);
 
+        horizontalProgressBar.setMax(mBuilder.progressMaxValues);
+
+
         //circularProgressBar 配置
         circularProgressBar.setBackgroundColor(mBuilder.progressbarBackgroundColor);
         circularProgressBar.setColor(mBuilder.progressColor);
         circularProgressBar.setProgressBarWidth(MSizeUtils.dp2px(mContext, mBuilder.circleProgressBarWidth));
         circularProgressBar.setBackgroundProgressBarWidth(MSizeUtils.dp2px(mContext, mBuilder.circleProgressBarBackgroundWidth));
-
     }
 
     public void showProgress(int progress, String message) {
@@ -203,6 +205,7 @@ public class MProgressBarDialog {
                 progressAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                        if (horizontalProgressBar == null) return;
                         int progressCurrent = (int) valueAnimator.getAnimatedValue();
                         horizontalProgressBar.setProgress(progressCurrent);
                     }
@@ -215,6 +218,7 @@ public class MProgressBarDialog {
                 progressSecondAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                        if (horizontalProgressBar == null) return;
                         int progressCurrent = (int) valueAnimator.getAnimatedValue();
                         horizontalProgressBar.setSecondaryProgress(progressCurrent);
                     }
@@ -297,6 +301,8 @@ public class MProgressBarDialog {
         int horizontalProgressBarHeight;
         //Dialog进出动画
         int animationID;
+        //progressbar最大值
+        int progressMaxValues;
 
         public Builder(Context context) {
             mContext = context;
@@ -315,6 +321,7 @@ public class MProgressBarDialog {
             circleProgressBarBackgroundWidth = 1;
             horizontalProgressBarHeight = 4;
             animationID = 0;
+            progressMaxValues = 0;
         }
 
         public MProgressBarDialog build() {
@@ -390,6 +397,14 @@ public class MProgressBarDialog {
         public Builder setAnimationID(@StyleRes int resId) {
             this.animationID = resId;
             return this;
+        }
+
+        public int getProgressMaxValues() {
+            return progressMaxValues;
+        }
+
+        public void setProgressMaxValues(int progressMaxValues) {
+            this.progressMaxValues = progressMaxValues;
         }
 
     }
