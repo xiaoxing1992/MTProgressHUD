@@ -399,12 +399,9 @@ public class MProgressBarDialog {
             return this;
         }
 
-        public int getProgressMaxValues() {
-            return progressMaxValues;
-        }
-
-        public void setProgressMaxValues(int progressMaxValues) {
+        public Builder setProgressMaxValues(int progressMaxValues) {
             this.progressMaxValues = progressMaxValues;
+            return this;
         }
 
     }
