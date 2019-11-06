@@ -321,7 +321,7 @@ public class MProgressBarDialog {
             circleProgressBarBackgroundWidth = 1;
             horizontalProgressBarHeight = 4;
             animationID = 0;
-            progressMaxValues = 0;
+            progressMaxValues = 100;
         }
 
         public MProgressBarDialog build() {
