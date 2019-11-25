@@ -239,7 +239,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn18:
                 showFragmentDialog();
-                showFragmentDialog();
                 break;
             case R.id.btn19:
                 configProgressbarCancelCircleDialog();
@@ -254,7 +253,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
         testFragmentDialog = new TestFragmentDialog();
-        testFragmentDialog.showDialog(MainActivity.this);
         testFragmentDialog.showDialog(MainActivity.this);
     }
 
