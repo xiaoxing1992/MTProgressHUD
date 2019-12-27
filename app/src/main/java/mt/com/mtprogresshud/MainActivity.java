@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import com.mt.mtdialoglibrary.MProgressBarCancelDialog;
 import com.mt.mtdialoglibrary.MProgressBarDialog;
+import com.mt.mtdialoglibrary.MProgressBarUploadDialog;
 import com.mt.mtdialoglibrary.MProgressDialog;
 import com.mt.mtdialoglibrary.MStatusDialog;
 import com.mt.mtdialoglibrary.MToast;
@@ -46,7 +47,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btn17;
     private Button btn18;
     private Button btn19;
+    private Button btn20;
     private TestFragmentDialog testFragmentDialog;
+    private MProgressBarUploadDialog mProgressBarUploadDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn17 = (Button) findViewById(R.id.btn17);
         btn18 = (Button) findViewById(R.id.btn18);
         btn19 = (Button) findViewById(R.id.btn19);
+        btn20 = (Button) findViewById(R.id.btn20);
 
         btn01.setOnClickListener(this);
         btn02.setOnClickListener(this);
@@ -92,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn17.setOnClickListener(this);
         btn18.setOnClickListener(this);
         btn19.setOnClickListener(this);
+        btn20.setOnClickListener(this);
     }
 
     @Override
@@ -245,6 +250,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 initCancelTimer();
                 break;
 
+            case R.id.btn20:
+                configProgressbarUploadCircleDialog();
+                initUploadTimer();
+                break;
+
         }
     }
 
@@ -394,6 +404,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    /**
+     * --------------------MProgressBarDialog start -------------------
+     */
+    private void configProgressbarUploadCircleDialog() {
+        //新建一个Dialog
+        mProgressBarUploadDialog = new MProgressBarUploadDialog.Builder(mContext)
+                .build();
+    }
+
     private void configProgressbarCircleDialog2() {
         //新建一个Dialog
         mProgressBarDialog = new MProgressBarDialog.Builder(mContext)
@@ -511,6 +530,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 @Override
                                 public void run() {
                                     mProgressBarCancelDialog.dismiss();
+                                }
+                            }, 500);
+                        }
+                    }
+                });
+            }
+        };
+        timer.schedule(task, 0, 200); //延时1000ms后执行，1000ms执行一次
+    }
+
+     private void initUploadTimer() {
+        destroyTimer();
+        timer = new Timer();
+        task = new TimerTask() {
+            @Override
+            public void run() {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (currentProgress < 100f) {
+                            mProgressBarUploadDialog.showProgress((int) currentProgress, "进度：" + currentProgress + "%");
+                            currentProgress += 5;
+                        } else {
+                            destroyTimer();
+                            currentProgress = 0.0f;
+                            mProgressBarUploadDialog.showStatusProgress(R.mipmap.img_done, "完成");
+                            //关闭
+                            mHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mProgressBarUploadDialog.dismiss();
                                 }
                             }, 500);
                         }

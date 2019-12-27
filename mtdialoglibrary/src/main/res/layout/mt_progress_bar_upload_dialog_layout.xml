@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:wheel="http://schemas.android.com/tools"
+    android:id="@+id/dialog_window_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/mt_colorDialogWindowBg"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/dialog_view_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="40dp"
+        android:background="@drawable/mt_dialog_view_bg"
+        android:minWidth="100dp"
+        android:minHeight="100dp"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="118dp"
+            android:layout_height="118dp"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:paddingTop="5dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="10dp">
+
+            <ImageView
+                android:id="@+id/iv_status"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="10dp"
+                android:contentDescription="@null"
+                android:visibility="gone" />
+
+            <com.mt.mtdialoglibrary.view.MProgressWheel
+                android:id="@+id/progress_wheel"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                wheel:mt_barColor="#b4b4b4"
+                wheel:mt_barWidth="2dp"
+                android:layout_marginBottom="8dp"
+                wheel:mt_fillRadius="true"
+                wheel:mt_progressIndeterminate="true" />
+
+            <TextView
+                android:id="@+id/tvShow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:ellipsize="end"
+                android:maxLines="6"
+                android:text="当前进度0%"
+                android:textColor="@color/mt_colorDialogTextColor"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
