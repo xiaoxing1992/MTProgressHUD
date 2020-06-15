@@ -1,8 +1,8 @@
 package com.mt.mtdialoglibrary.config;
 
 import android.graphics.Color;
-import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
+import androidx.annotation.Nullable;
+import androidx.annotation.StyleRes;
 
 import com.mt.mtdialoglibrary.listeners.OnDialogDismissListener;
 
